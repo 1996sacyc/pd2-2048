@@ -6,7 +6,7 @@
 #include <QKeyEvent>
 #include <QTimer>
 #include <ctime>
-
+#include <QDebug>
 namespace Ui {
 class game;
 }
@@ -39,6 +39,10 @@ public:
     void CheckScore();
     int ProcessGame();
     int GetNewNumber();
+    bool checkMove;
+
+private slots:
+    void on_resetbutton_clicked();
 
 private:
     Ui::game *ui;

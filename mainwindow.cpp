@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     connect(ui->startbutton,SIGNAL(clicked()),this,SLOT(on_startbutton_clicked()));
+    this->setStyleSheet("background-color: white;");
 }
 
 MainWindow::~MainWindow()
@@ -18,5 +19,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_startbutton_clicked(){
     begin.show();
+    begin.Gamestart();
     this->close();
 } /*start the game button*/

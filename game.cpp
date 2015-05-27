@@ -7,6 +7,7 @@ game::game(QWidget *parent) :
     ui(new Ui::game)
 {
     ui->setupUi(this);
+    connect(ui->resetbutton,SIGNAL(clicked()),this,SLOT(on_resetbutton_clicked()));
 
     for(int k=0; k<16; k++){
         block[k].location=k+1;
@@ -19,6 +20,7 @@ game::game(QWidget *parent) :
         }
     } /*初始化遊戲過程所需的二維陣列(暫存)*/
     srand(time(NULL));
+    checkMove=false;
 }
 
 game::~game()
@@ -348,11 +350,11 @@ void game::CheckScore(){
                break;
            case 1 :  /*右*/
                for (r=0; r<4; r++){
-                  for (c=3; c>-1; c--){
+                  for (c=3; c>0; c--){
                      if ((check[r][c] !=0 ) && (check[r][c] == check[r][c-1])){
                           check[r][c]*=2;
                           score+=check[r][c];
-                          for (i=c-1; i>-1; i--){
+                          for (i=c-1; i>0; i--){
                                check[r][i]=check[r][i-1];
                           }
                           if(flag){
@@ -373,7 +375,7 @@ void game::CheckScore(){
                      if ((check[r][c] !=0 ) && (check[r][c] == check[r-1][c])){
                           check[r][c]*=2;
                           score+=check[r][c];
-                          for (i=r-1; i>-1; i--){
+                          for (i=r-1; i>0; i--){
                                check[i][c]=check[i-1][c];
                           }
                           if(flag){
@@ -389,11 +391,11 @@ void game::CheckScore(){
                break;
            case 3 :  /*左*/
                for (r=0; r<4; r++){
-                  for (c=0; c<4; c++){
+                  for (c=0; c<3; c++){
                      if ((check[r][c] !=0 ) && (check[r][c] == check[r][c+1])){
                           check[r][c]*=2;
                           score+=check[r][c];
-                          for (i=c+1; i<4; i++){
+                          for (i=c+1; i<3; i++){
                                check[r][i]=check[r][i+1];
                           }
                           if(flag){
@@ -404,20 +406,21 @@ void game::CheckScore(){
                             flag++;
                           }
                       }
-                    }
-                }
+                  }
+              }
       }
 }
 
 int game::ProcessGame(){
     int i,r,c;
     int rptr[4], cptr[4];
+
     switch (dir){
           case 0 :  /*上*/
               for (i=0; i<4; i++) rptr[i]=0;
               for (r=0; r<4; r++){
                  for (c=0; c<4; c++){
-                    if (check[r][c] !=0){
+                    if (check[r][c]!=0){
                         temcheck[rptr[c]][c]=check[r][c];
                         rptr[c]++;
                     }
@@ -433,6 +436,9 @@ int game::ProcessGame(){
               i=0;
               for(r=0; r<4; r++){
                   for(c=0; c<4; c++){
+                      if(block[i].num!=check[r][c]){
+                          checkMove=true;
+                      }
                       block[i].num=check[r][c];
                       i++;
                   }
@@ -467,6 +473,9 @@ int game::ProcessGame(){
               i=0;
               for(r=0; r<4; r++){
                   for(c=0; c<4; c++){
+                      if(block[i].num!=check[r][c]){
+                          checkMove=true;
+                      }
                       block[i].num=check[r][c];
                       i++;
                   }
@@ -501,6 +510,9 @@ int game::ProcessGame(){
               i=0;
               for(r=0; r<4; r++){
                   for(c=0; c<4; c++){
+                      if(block[i].num!=check[r][c]){
+                          checkMove=true;
+                      }
                       block[i].num=check[r][c];
                       i++;
                   }
@@ -535,6 +547,9 @@ int game::ProcessGame(){
               i=0;
               for(r=0; r<4; r++){
                   for(c=0; c<4; c++){
+                      if(block[i].num!=check[r][c]){
+                          checkMove=true;
+                      }
                       block[i].num=check[r][c];
                       i++;
                   }
@@ -566,7 +581,7 @@ void game::NewGameInit(){
 
      if(newnum==0) newnum=2;
      else newnum=4; /*不是產生2就是4*/
-     block[newlocation].location=newnum;
+     block[newlocation].num=newnum;
      Setpics(block[newlocation]);
 } /*隨機產生位置&數字*/
 
@@ -576,6 +591,30 @@ int game::GetNewNumber(){
     int ocp=0;
     int Newloc;
     int Newnum;
+    if(checkMove==false){
+        return 1;//1的狀況代表完全沒有動，沒動就不需要產生新的格子
+    }
+
+    /*如果有移動的話程式碼會繼續跑*/
+    /*有移動的話就不可能全部的格子會填滿*/
+    /*所以一定要產生新的格子*/
+    /*產生完新的格子之後才要判斷有沒有滿*/
+
+    Newloc=rand()%16;
+    while(block[Newloc].num!=0){
+        Newloc=rand()%16;
+    } /*確認那格是不是空的*/
+    Newnum=rand()%1;
+    if (Newnum==0) Newnum=2;
+    else Newnum=4;
+    block[Newloc].num=Newnum;
+    i=0;
+    for(r=0; r<4; r++){
+        for(c=0; c<4; c++){
+            check[r][c]=block[i].num;
+            i++;
+        }
+    } /*初始化遊戲過程所需的二維陣列*/
 
     for (r=0; r<4; r++){
         for(c=0; c<4; c++){
@@ -583,49 +622,30 @@ int game::GetNewNumber(){
         }
     }	/*16格全滿的狀況可能是輸了，也可能還有可以移動的空間*/
 
-    if (ocp!=16){
-        Newloc=rand()%16+1;
-        while(block[Newloc].num!=0){
-              Newloc=rand()%16;
-        } /*確認那格是不是空的*/
-        Newnum=rand()%2;
-        if (Newnum==0) Newnum=2;
-        else Newnum=4;
-        block[Newloc].num=Newnum;
-        i=0;
-        for(int r=0; r<4; r++){
-            for(int c=0; c<4; c++){
-                check[r][c]=block[i].num;
-                i++;
-            }
-        } /*初始化遊戲過程所需的二維陣列*/
-
-        return 1;
-
-    } /*1的狀況代表位置沒有滿，所以繼續隨機新增格子*/
-
-    else{
+    if(ocp==16){
         for(r=0; r<4; r++){
-            for(c=0; c<4; c++){
+            for(c=1; c<4; c++){
                 if((check[r][c])==(check[r][c-1]))
                     return 0;
             }
         } /*判斷左右其中一個有無相同*/
 
         for(c=0; c<4; c++){
-            for(r=0; r<4; r++){
-                    if((check[r][c])==(check[r][c-1]))
+            for(r=1; r<4; r++){
+                    if((check[r][c])==(check[r-1][c]))
                         return 0;
             }
         } /*判斷上下其中一個有無相同*/
         /*0的狀況是格子滿了，而且還有可以合併的格子*/
         return 2; /*2的況狀是滿了，而且沒有可合併的格子*/
     }/*判斷是不是還有可以移動的空間*/
+    return 3;/*3的狀況代表有動而且格子沒有滿而且產生新的格子了*/
 }
 
 void game::keyPressEvent(QKeyEvent *event){
      if(event->type()==QEvent::KeyPress){
          int x=0;
+         checkMove=false;
          for(int r=0; r<4; r++){
              for(int c=0; c<4; c++){
                  check[r][c]=block[x].num;
@@ -657,4 +677,30 @@ void game::keyPressEvent(QKeyEvent *event){
 
 void game::Gamestart(){
      NewGameInit(); /*產生新遊戲*/
+}
+
+void game::on_resetbutton_clicked(){
+    int k,r,c;
+    for(k=0; k<16; k++){
+        block[k].location=k+1;
+        block[k].num=0;
+    } /*初始化每一個block的位置跟儲存變數*/
+
+    for(r=0; r<4; r++){
+        for(c=0; c<4; c++){
+            check[r][c]=0;
+        }
+    }
+
+    for(r=0; r<4; r++){
+        for(c=0; c<4; c++){
+            temcheck[r][c]=0;
+        }
+    } /*初始化遊戲過程所需的二維陣列(暫存)*/
+    srand(time(NULL));
+    checkMove=false;
+    for(k=0; k<16; k++){
+        Setpics(block[k]);
+    }
+    Gamestart();
 }
