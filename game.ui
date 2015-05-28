@@ -324,9 +324,9 @@
    <property name="geometry">
     <rect>
      <x>180</x>
-     <y>-10</y>
-     <width>241</width>
-     <height>141</height>
+     <y>0</y>
+     <width>221</width>
+     <height>101</height>
     </rect>
    </property>
    <property name="font">
@@ -336,7 +336,7 @@
     </font>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:72pt; font-weight:600; color:#ff0000;&quot;&gt;2048&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:72pt; font-weight:600; font-style:italic; color:#ff0000;&quot;&gt;2048&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="scaledContents">
     <bool>true</bool>
@@ -431,7 +431,7 @@
     </font>
    </property>
    <property name="text">
-    <string>2048</string>
+    <string>0</string>
    </property>
   </widget>
   <widget class="QLabel" name="blood3">
@@ -466,7 +466,7 @@
     <pixmap resource="pics.qrc">:/pics/下載 (1).jpg</pixmap>
    </property>
   </widget>
-  <widget class="QLabel" name="label_4">
+  <widget class="QLabel" name="blood4">
    <property name="geometry">
     <rect>
      <x>190</x>
@@ -501,7 +501,7 @@
     <pixmap resource="pics.qrc">:/pics/下載 (2).jpg</pixmap>
    </property>
   </widget>
-  <widget class="QLabel" name="label_6">
+  <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -546,7 +546,7 @@
     <string/>
    </property>
   </widget>
-  <zorder>label_6</zorder>
+  <zorder>label_2</zorder>
   <zorder>blood3</zorder>
   <zorder>blood2</zorder>
   <zorder>blood1</zorder>
@@ -570,10 +570,10 @@
   <zorder>resetbutton</zorder>
   <zorder>scoretitle</zorder>
   <zorder>score</zorder>
-  <zorder>label_4</zorder>
-  <zorder>bloodtitle</zorder>
+  <zorder>blood4</zorder>
   <zorder>labelwin</zorder>
   <zorder>labellose</zorder>
+  <zorder>bloodtitle</zorder>
  </widget>
  <resources>
   <include location="pics.qrc"/>

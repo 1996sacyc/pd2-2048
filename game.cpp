@@ -325,7 +325,6 @@ void game::Setpics(Set & b){
 void game::CheckScore(){
      int r,c; /*row&colum*/
      int i;
-     int flag=0;
 
      switch (dir){
            case 0 : /*上*/
@@ -337,13 +336,7 @@ void game::CheckScore(){
                           for (i=r+1; i<3; i++){
                                check[i][c]=check[i+1][c];
                           }
-                          if(flag){
-                              check[2][c]=0;
-                          }
-                          else{
-                              check[3][c]=0;
-                              flag++;
-                          }
+                          check[3][c]=0;
                       }
                    }
                }
@@ -357,13 +350,7 @@ void game::CheckScore(){
                           for (i=c-1; i>0; i--){
                                check[r][i]=check[r][i-1];
                           }
-                          if(flag){
-                              check[r][1]=0;
-                          }
-                          else{
-                              check[r][0]=0;
-                              flag++;
-                          }
+                          check[r][0]=0;
                       }
 
                    }
@@ -378,13 +365,7 @@ void game::CheckScore(){
                           for (i=r-1; i>0; i--){
                                check[i][c]=check[i-1][c];
                           }
-                          if(flag){
-                            check[1][c]=0;
-                          }
-                          else{
-                            check[0][c]=0;
-                            flag++;
-                          }
+                          check[0][c]=0;
                       }
                   }
                 }
@@ -398,13 +379,7 @@ void game::CheckScore(){
                           for (i=c+1; i<3; i++){
                                check[r][i]=check[r][i+1];
                           }
-                          if(flag){
-                            check[r][2]=0;
-                          }
-                          else{
-                            check[r][3]=0;
-                            flag++;
-                          }
+                          check[r][3]=0;
                       }
                   }
               }
@@ -572,6 +547,8 @@ void game::NewGameInit(){
      int newlocation; /*一開始產生的格子的位置*/
      int newnum; /*一開始產生的格子的數字*/
      score=0;
+     str=QString::number(score,10);
+     ui->score->setText(str);
 
      newlocation=rand()%16+1;
      while(block[newlocation].num!=0){
@@ -699,8 +676,11 @@ void game::on_resetbutton_clicked(){
     } /*初始化遊戲過程所需的二維陣列(暫存)*/
     srand(time(NULL));
     checkMove=false;
+    ui->labelwin->hide();
+    ui->labellose->hide();
     for(k=0; k<16; k++){
         Setpics(block[k]);
     }
     Gamestart();
-}
+    Gamestart();
+} /*reset整個遊戲*/
